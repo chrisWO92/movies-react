@@ -1,11 +1,27 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import styles from "./MovieDetails.module.css";
+import { useEffect } from "react";
+import { get } from "../utils/httpClient";
+import { useState } from "react";
 
 /* We load this file to get details of the film. In this case this movie.json just has
 the info about "Godzilla vs Kong" */
-import movie from "./movie.json";
+
 
 export function MovieDetails() {
+    const { movieId } = useParams();
+    const [movie, setMovie] = useState(null);
+    useEffect(() => {
+        get("/movie/" + movieId).then(data => {
+            setMovie(data);
+        })
+    }, [movieId]);
+
+    if (!movie) {
+        return null;
+    }
+
     const imageURL = "https://image.tmdb.org/t/p/w500" + movie.poster_path;
     return (
         <div className={styles.detailsContainer}>
