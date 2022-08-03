@@ -10,19 +10,26 @@ the info about "Godzilla vs Kong" */
 
 
 export function MovieDetails() {
+
     const { movieId } = useParams();
+    /* The useParams() hook catches the "movieId" parameter passed to the 'path="/movies/:movieId"' in the App.jsx file, so it can be used as a vairable in this code */
+
     const [movie, setMovie] = useState(null);
+
     useEffect(() => {
         get("/movie/" + movieId).then(data => {
             setMovie(data);
         })
-    }, [movieId]);
+    }, [movieId]); 
+    /* The "[ movieId ]" statement indicates the dependencies of the useEffect() hook. When "movieId" changes, the hook is executed */
 
+    /* At first, "movie" is set at null value with the "useState(null)" statement. It implies that the useEffect() hook will not be executed. Instead, the programm will move forward to the if() statement below, returning "null" taking into consideration that "movie" does not exist yet. Then te programm goes back to the useEffect() hook, getting into it, doing the promise and setting the data into the "movie" parameter */
     if (!movie) {
         return null;
     }
 
     const imageURL = "https://image.tmdb.org/t/p/w500" + movie.poster_path;
+    
     return (
         <div className={styles.detailsContainer}>
             <img className={`${styles.col} ${styles.movieImage}`} src={imageURL} alt={movie.title} />

@@ -35,6 +35,13 @@ export function App() {
         </Link>
       </header>
       
+      {/* What I undestand is that this Routes doesnt appear in the screen,
+      but they charge and redirect the element defined in it. If the current
+      path we are viewing is "/" then the <LandingPage /> element will charge, 
+      but if it's the "/movies/:movieId" then the <MovieDetails/> will charge.
+      The "/movies/:movieId" is a dynamic path that detects any set of characters
+      after "/movies/" and saves it into a variable called "movieId" */}
+
       <Routes>
         <Route exact path="/" element={<LandingPage/>} />
         <Route exact path="/movies/:movieId" element={<MovieDetails />} />
