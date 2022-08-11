@@ -1,18 +1,18 @@
-# Getting Started with Create React App
+# Movies React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este proyecto hace parte de mi plan personal de aprendizaje de React. En este documento estaré presentando el resumen de los conceptos puestos en práctica y los skills adquiridos con la misma
 
-## Available Scripts
+## Funcionamiento general
 
-In the project directory, you can run:
+Se crea una aplicación de react.\
+La misma comienza por al redenrizado del archivo `index.js`, en el cual se crea un `<Router />` que renderiza el componente general `<App />`.
+
+Tanto el archivo `index.js` como el componente `<App />` están en la carpeta **/src**  
 
 ### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Corre la interfaz en el navegador.\
+Abre [http://localhost:3000](http://localhost:3000) para visualización.
 
 ### `npm test`
 
