@@ -7,6 +7,9 @@ export function MovieCard({ movie }) {
   return (
     <li className={styles.movieCard}>
       <Link to={"/movies/" + movie.id}>
+        {/* Cuando se haga click dentro de todo lo que implica la imagen, 
+            se redirigirá a la ruta "/movies/movieId" y cargará el elemento
+            MovieDetails, tal como se indica en el archivo App.jsx  */}
         <img
           width={230}
           height={345}

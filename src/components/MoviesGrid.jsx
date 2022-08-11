@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { get } from "../utils/httpClient";
 import { MovieCard } from "./MovieCard";
+import { Spinner } from "../components/Spinner";
 import styles from "./MoviesGrid.module.css";
 
 export function MoviesGrid() {
@@ -13,6 +14,7 @@ export function MoviesGrid() {
      code. */
   const [movies, setMovies] = useState([]);
   
+  const [isLoading, setIsLoading] = useState(true);
 
   /* The useEffect hook is made to do an action when a secondary effect happens.
      For example, when the element render for the first time or when it is updated.
@@ -20,10 +22,17 @@ export function MoviesGrid() {
      movies array is updated, catching the data that comes from the API and that is called
      with the get(path) function. */
   useEffect(() => {
+    setIsLoading(true);
       get("/discover/movie").then((data) => {
         setMovies(data.results);
+        setIsLoading(false);
       });
     }, []);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
     <ul className={styles.moviesGrid}>
       {/*MoviesGrid is a CSS Grid. We use movies.map(movie) to apply return an element
