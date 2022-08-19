@@ -4,12 +4,9 @@ import { get } from "../utils/httpClient";
 import { MovieCard } from "./MovieCard";
 import { Spinner } from "../components/Spinner";
 import styles from "./MoviesGrid.module.css";
-import { useLocation } from "react-router-dom";
+import { useQuery } from "../hooks/useQuery";
 
-/* Se crea un hook personalizado, que depende del hook de react useLocation. Con esta función se retorna lo que se identifique como search en la ruta actual. Debe tenerse en cuenta que el hook useLocation retorna un array de objetos, uno de los cuales tiene la key "search", que lo identifica como "?search=bat", asumiendo que se escribió bat en la barra de búsqueda */
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
+
 
 export function MoviesGrid() {
   /* useState hook works creating an array, being the first element of this array

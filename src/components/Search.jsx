@@ -1,12 +1,23 @@
 import React from "react";
 import styles from "./Search.module.css";
 import { FaSearch } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect,  useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "../hooks/useQuery";
 
 export function Search() {
   const [searchText, setSearchText] = useState("");
 
+  /* Se pone el useQuery en el Search para crear un efecto que vigile los cambios en la variable search. Si hay un cambio en la variable search, se dará la instrucción mediante un efecto para que se actualice el valor del input para que quede vacío */
+  const query = useQuery();
+  const search = query.get("search");
+
+  useEffect(() => {
+      /* Si se pone sólo search en el paréntesis, al actualizar la ruta, el valor del input sigue siendo el valor de la búsqueda. En cambio, si se pone search || "" quiere decir que si el valor de search no existe, se debe setear la variable searchText en comilla vacía y con esto el input se estaría actualizando correctamente a vacío cuando no se estén haciendo una búsqueda */
+      setSearchText(search || "");
+  }, [search]);
+
+  /* El hook useNavigate se usa para actualizar el path en el que queremos ubicarnos. En el caso de abajo, se usa para que al hacer el submit del form, la ruta del navegador se actualice a una ruta configurada para posteriormente hacer una búsqueda en la API, que sería "/?search=" + searchText */
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {

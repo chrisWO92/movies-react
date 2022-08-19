@@ -6,6 +6,7 @@ import { get } from "../utils/httpClient";
 import { useState } from "react";
 import { Spinner } from "../components/Spinner";
 
+
 /* We load this file to get details of the film. In this case this movie.json just has
 the info about "Godzilla vs Kong" */
 
@@ -21,20 +22,22 @@ export function MovieDetails() {
     const [isLoading, setIsLoading] = useState(true);
     /* Se crea otro seguidor de estado para la variable isLoading que en principio se setea en true. La idea es que si esta variable está en true, quiere decir que está cargando, y en ese caso se piensa mostrar una animación de carga, como un circulo dando vueltas o una barra de carga. */
 
+   
+
     useEffect(() => {
         
         setIsLoading(true);
         /* Se comienza el useEffect() seteando la variable isLoading en true para que aparezca la animación de carga */
 
         get("/movie/" + movieId).then(data => {
+            setMovie(data);
             setIsLoading(false);
             /* Cuando los datos están cargados, la animación se detiene */
-            setMovie(data);
         })
     }, [movieId]); 
     /* The "[ movieId ]" statement indicates the dependencies of the useEffect() hook. When "movieId" changes, the hook is executed */
 
-    /* Si isLoading está en true, se carga el elemento dentro del return */
+    /* Si isLoading está en true, se carga el icono de carga, que en este caso será un Spinner giratorio */
     if (isLoading) {
         return <Spinner />;
     }
