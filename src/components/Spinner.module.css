@@ -1,11 +1,16 @@
 .spinner {
     display: flex;
     justify-content: center;
+    /*Remenber that this margin was setted as 30 px because the screen where having a problem, preventing us from making scroll*/
+    margin: 30px;
 }
 
 .spinning {
     animation: spinner 1s linear infinite;
 }
+
+
+/* Animación para hacer que el spinner gire indefinidamente: */
 
 @keyframes spinner {
     to {

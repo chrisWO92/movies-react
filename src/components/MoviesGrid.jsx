@@ -24,7 +24,9 @@ export function MoviesGrid() {
      movies array is updated, catching the data that comes from the API and that is called
      with the get(path) function. */
 
-  const [ page, setPage ] = useState();
+
+  /* We create a state to update the page, using "1" as the default value of the page variable */
+  const [ page, setPage ] = useState(1);
 
   /* Lo que retorna el hook personalizado useQuery se guarda en una variable, y luego mediante el método get se obtiene lo que se identifique como search. Mientras que el useLocation().search arroja "?search=bat", useQuery().get("search") arroja sólo "bat" */
   const query = useQuery();
@@ -38,7 +40,8 @@ export function MoviesGrid() {
       ? "/search/movie?query=" + search + "&page=" + page
       : "/discover/movie?page=" + page;
     get(searchURL).then((data) => {
-      setMovies(data.results);
+      /* Instead of using setMovies(data.results), we use setMovies((prevMovies) => prevMovies.concat(data.results)), becuase we need to add the previous movies array, that is related to page 1, to the movies array related to the second page, and so on */
+      setMovies((prevMovies) => prevMovies.concat(data.results));
       setIsLoading(false);
     });
 
@@ -47,9 +50,10 @@ export function MoviesGrid() {
   }, [search, page]);
 
   /* Se muestra el spinner en caso que isLoading esté seteado en true */
-  if (isLoading) {
+  /* We comment this code because the Spinner component is being loaded when the useEffect() is activated. Instead of this we use the "loader" parameter in the InfiniteScroll component */
+  /* if (isLoading) {
     return <Spinner />;
-  }
+  } */
 
   return (
     <InfiniteScroll
@@ -59,6 +63,7 @@ export function MoviesGrid() {
       dataLength={movies.length} 
       hasMore={true} 
       next={() => setPage((prevPage) => prevPage + 1)}
+      loader={<Spinner />}
     >
       <ul className={styles.moviesGrid}>
         {/*MoviesGrid is a CSS Grid. We use movies.map(movie) to apply return an element
