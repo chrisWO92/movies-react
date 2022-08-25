@@ -5,8 +5,7 @@ import { MovieCard } from "./MovieCard";
 import { Spinner } from "../components/Spinner";
 import styles from "./MoviesGrid.module.css";
 import { useQuery } from "../hooks/useQuery";
-
-
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export function MoviesGrid() {
   /* useState hook works creating an array, being the first element of this array
@@ -25,7 +24,7 @@ export function MoviesGrid() {
      movies array is updated, catching the data that comes from the API and that is called
      with the get(path) function. */
 
-  /*  */
+  const [ page, setPage ] = useState();
 
   /* Lo que retorna el hook personalizado useQuery se guarda en una variable, y luego mediante el método get se obtiene lo que se identifique como search. Mientras que el useLocation().search arroja "?search=bat", useQuery().get("search") arroja sólo "bat" */
   const query = useQuery();
@@ -36,15 +35,16 @@ export function MoviesGrid() {
 
     /* Se crea la variable searchURL con un condicional ternario. Si el parámetro search existe, el path que va a la función get() para hacer el fetch será un patch de búsqueda, pero si no existe se hace el fetch con un path genérico que trae todas las películas para rellenar la grilla */
     const searchURL = search
-      ? "/search/movie?query=" + search
-      : "/discover/movie";
+      ? "/search/movie?query=" + search + "&page=" + page
+      : "/discover/movie?page=" + page;
     get(searchURL).then((data) => {
       setMovies(data.results);
       setIsLoading(false);
     });
 
     /* Antes el useEffect() no tenía arreglo de dependencias, aparecía []. Ahora se configura para que la actualización se haga cada vez que se recarga la página y también cada vez que la variable search cambie, y esta a su vez depende de si se hace una búsqueda o no */
-  }, [search]);
+    /* We add "page" to the dependecies array of the useEffect() hook, to make the actions inside when the page variable changes. */
+  }, [search, page]);
 
   /* Se muestra el spinner en caso que isLoading esté seteado en true */
   if (isLoading) {
@@ -52,13 +52,22 @@ export function MoviesGrid() {
   }
 
   return (
-    <ul className={styles.moviesGrid}>
-      {/*MoviesGrid is a CSS Grid. We use movies.map(movie) to apply return an element
+    <InfiniteScroll
+      /* The next parameters of the InfiniteScroll component are those that come with the installation for it. This component lets us create an infinite scroll, and it needs de length of the data we are showing in the actual screen. We need to know that the API we're using gives us the information about the movies in pages, and it shows by default the first of these pages. But there are a lot of pages and we can show them all with this component. 
+      The hasMore parameter lets us tell the component if there are more pages to show. It will turn into false when we reach the last page.
+      The next parameter let us define the actions we're taking when the component loads the next page. In this case we create a state that updates the page where we are. The prevPage parameter we're passing to the setPage function is the same parameter "page" of the useState() we've created. We just add 1 to the page number to show the next page of the API.*/
+      dataLength={movies.length} 
+      hasMore={true} 
+      next={() => setPage((prevPage) => prevPage + 1)}
+    >
+      <ul className={styles.moviesGrid}>
+        {/*MoviesGrid is a CSS Grid. We use movies.map(movie) to apply return an element
       per each movie in the json file. MovieCard is the element returned and it's a
       <li></li> element. */}
-      {movies.map((movie) => (
-        <MovieCard key={movie.id} movie={movie} />
-      ))}
-    </ul>
+        {movies.map((movie) => (
+          <MovieCard key={movie.id} movie={movie} />
+        ))}
+      </ul>
+    </InfiniteScroll>
   );
 }
