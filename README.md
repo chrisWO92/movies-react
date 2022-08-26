@@ -1,10 +1,11 @@
 # Movies React App
 
-Este proyecto hace parte de mi plan personal de aprendizaje de React. En este documento estaré presentando el resumen de los conceptos puestos en práctica y los skills adquiridos con la misma
+Este proyecto hace parte de mi plan personal de aprendizaje de React. En este documento estaré presentando el resumen de los conceptos puestos en práctica y los skills adquiridos con la misma.
 
 ## index.js
 
-Se crea una aplicación de react.\
+Se crea una aplicación de react.
+
 La misma comienza por al redenrizado del archivo `index.js`, en el cual se crea un `<Router />` que renderiza el componente general `<App />`.
 
 Tanto el archivo `index.js` como el componente `<App />` están en la carpeta **/src**.
