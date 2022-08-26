@@ -24,9 +24,9 @@ Es el componente que se renderiza cuando el usuario hace click sobre alguna de l
 
 Se usan los siguientes hooks:
 
--`{ useParams } from "react-router-dom"`
--`{ useState } from "react"`
--`{ useEffect } from "react"`
+-`{ useParams } from "react-router-dom"`\
+-`{ useState } from "react"`\
+-`{ useEffect } from "react"`\
 
 #### 2.1.1. `{ useParams } from "react-router-dom"`
 
@@ -42,8 +42,8 @@ El arreglo vacío **[]** pasado como parámetro indica el estado inicial que le 
 
 Se crean los siguientes estados:
 
--`const [movie, setMovie] = useState(null)`
--`const [isLoading, setIsLoading] = useState(true)`
+-`const [movie, setMovie] = useState(null)`\
+-`const [isLoading, setIsLoading] = useState(true)`\
 
 La función **setMovie()** actualiza el valor de la variable **movie**, la cual tiene un valor inicial de *null*, y que es el arreglo de datos de las peliculas que llega desde la API. Por su parte, la función **setIsLoading()** actualiza la variable **isLoading** que le indica al componente si la aplicación se encuentra esperando la respuesta de la petición de los datos o si ya los ha recibido, para saber cuando mostrar en pantalla el spinner de carga.
 
@@ -57,17 +57,38 @@ Dentro del llamado al **useEffect()** de este componente se llama a la función 
 
 Este elemento carga dos componentes internos, el componente `<Search />` y el componente `<MoviesGrid />`, los cuales ya se encuentran dentro de la carpeta que contiene todos los demás componentes de la aplicación, **src/components**.
 
-#### 2.1. `<Search />`
+#### 3.1. `<Search />`
 
 Este componente le permite al usuario ingresar una palabra clave para hacer una consulta a la API de peliculas. Usa la librería `react-icons/fa` para usar el componente `<FaSearch />` para generar un ícono de lupa de búsqueda, y los siguientes hooks:
 
--`{ useState } from "react"`
--`{ useEffect } from "react"`
--`{ useNavigate } from "react-router-dom"`
--`{ useQuery } from "../hooks/useQuery";`
+-`{ useState } from "react"`\
+-`{ useEffect } from "react"`\
+-`{ useNavigate } from "react-router-dom"`\
+-`{ useQuery } from "../hooks/useQuery"`\
 
-#### 2.1.1. -`{ useState } from "react"`
+#### 3.1.1. -`{ useState } from "react"`
 
-Se crea el estado `const [searchText, setSearchText] = useState("")`
+Se crea el estado `const [searchText, setSearchText] = useState("")` para actualizar y manejar el texto que se encuentra dentro del input de búsqueda.
 
-#### 2.1.2. `{ useEffect } from "react"`
+La actualización mediente la función **setSearchText()** se hace una vez dentro del **useEffect()**, en el cualse actualiza la variable **searchText** con la variable **search**, que se obtiene de usar el hook **useQuery()**.
+
+También se hace otra actualización mediante la detección del evento **onChange={}** del input, en el cual se convoca la función **setSearchText()** y se actualiza **searchText** con el valor que detecta el evento: **e.target.value**.
+
+#### 3.1.2. `{ useEffect } from "react"`
+
+El hook **useEffect()** en este componente se activa cuando se renderiza, y cuando cambia la variable **search** que es el valor del input. 
+
+#### 3.1.3. `{ useNavigate } from "react-router-dom"`
+
+El hook **useNavigate()** se usa para actualizar el path en el que queremos ubicarnos. En este componente se usa para que al hacer el submit del form, la ruta del navegador se actualice a una ruta configurada para posteriormente hacer una búsqueda en la API, que sería **"/?search=" + searchText**. Es como un **useState()** que aplica sólo a la ruta del navegador. Se actualiza mediante el evento *onSubmit* del form del componente.
+
+#### 3.1.4. `{ useQuery } from "../hooks/useQuery"`
+
+Se crea un hook personalizado, que depende del hook de react **useLocation()**. Con esta función se retorna lo que se identifique como **search** en la ruta actual. Debe tenerse en cuenta que el hook **useLocation()** retorna un array de objetos, uno de los cuales tiene la key **search**, que lo identifica como **?search=bat**, asumiendo que se escribió *bat* en la barra de búsqueda.
+
+Lo que retorna el hook personalizado **useQuery()** se guarda en una variable, y luego mediante el método **get()** se obtiene lo que se identifique como **search**. Mientras que el `useLocation().search` arroja **?search=bat**, `useQuery().get("search")` arroja sólo **bat**.
+
+Con esta cadena de texto escrita en el input del form, se hace la consulta a la API cuando se activa el **useEffect()**, que se ejecuta cuando cambia la variable **search** y también cuando se actualiza la página de la consulta (este dato sirve para hacer el InfiniteScroll).
+
+
+# Terminar de explicar el componente Search
