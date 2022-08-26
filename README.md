@@ -26,7 +26,7 @@ Se usan los siguientes hooks:
 
 -`{ useParams } from "react-router-dom"`\
 -`{ useState } from "react"`\
--`{ useEffect } from "react"`\
+-`{ useEffect } from "react"`
 
 #### 2.1.1. `{ useParams } from "react-router-dom"`
 
@@ -43,7 +43,7 @@ El arreglo vacío **[]** pasado como parámetro indica el estado inicial que le 
 Se crean los siguientes estados:
 
 -`const [movie, setMovie] = useState(null)`\
--`const [isLoading, setIsLoading] = useState(true)`\
+-`const [isLoading, setIsLoading] = useState(true)`
 
 La función **setMovie()** actualiza el valor de la variable **movie**, la cual tiene un valor inicial de *null*, y que es el arreglo de datos de las peliculas que llega desde la API. Por su parte, la función **setIsLoading()** actualiza la variable **isLoading** que le indica al componente si la aplicación se encuentra esperando la respuesta de la petición de los datos o si ya los ha recibido, para saber cuando mostrar en pantalla el spinner de carga.
 
@@ -64,7 +64,7 @@ Este componente le permite al usuario ingresar una palabra clave para hacer una 
 -`{ useState } from "react"`\
 -`{ useEffect } from "react"`\
 -`{ useNavigate } from "react-router-dom"`\
--`{ useQuery } from "../hooks/useQuery"`\
+-`{ useQuery } from "../hooks/useQuery"`
 
 #### 3.1.1. -`{ useState } from "react"`
 
