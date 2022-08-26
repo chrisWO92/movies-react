@@ -2,69 +2,71 @@
 
 Este proyecto hace parte de mi plan personal de aprendizaje de React. En este documento estaré presentando el resumen de los conceptos puestos en práctica y los skills adquiridos con la misma
 
-## Funcionamiento general
+## index.js
 
 Se crea una aplicación de react.\
 La misma comienza por al redenrizado del archivo `index.js`, en el cual se crea un `<Router />` que renderiza el componente general `<App />`.
 
-Tanto el archivo `index.js` como el componente `<App />` están en la carpeta **/src**  
+Tanto el archivo `index.js` como el componente `<App />` están en la carpeta **/src**.
 
-### `npm start`
+### 1. Elemento `<App />` y librería `react-router-dom`
 
-Corre la interfaz en el navegador.\
-Abre [http://localhost:3000](http://localhost:3000) para visualización.
+Si queremos usar la librería `react-router-dom`, siempre debemos encerrar nuestro árbol de dependencias dentro de un BrowserRouter, que llamamos en este caso **Router**. 
 
-### `npm test`
+Permite el enrutamiento dinámico. Las rutas que se definan dentro del **Router** dependerán del path actual del navegador, y cargaran un elemento en particular dependiendo de este dato.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+En este caso se carga el elemento `<LandingPage />` en caso que `path="\"`, y `<MovieDetails />` en caso que `path="/movies/:movieId"`, siendo **movieId** un identificador que se define para cualquier cadena de caracteres que venga después de la cadena **/movies/**. De esta manera se pueden cargar los detalles de una película enviando una consulta a la API con el identificador de una pelicula en particular sobre la cual se haga click. Hay que tener en cuenta que el componente `<MovieDetails />` se carga en la pantalla a partir del click que se le haga a cualquiera de las peliculas mostradas. `<LandingPage />` y `<MovieDetails />` se encuentra un nivel abajo en el arbol de carpetas, dentro de la carpeta **/src/pages**.
 
-### `npm run build`
+### 2. Elemento `<MoviesDetails />`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Es el componente que se renderiza cuando el usuario hace click sobre alguna de las cartas de las peliculas (las cuales también son un componente que se explicará más adelante). 
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Se usan los siguientes hooks:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+-`{ useParams } from "react-router-dom"`
+-`{ useState } from "react"`
+-`{ useEffect } from "react"`
 
-### `npm run eject`
+#### 2.1.1. `{ useParams } from "react-router-dom"`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+La sentencia `const { movieId } = useParams()` toma el valor de la variable **movieId** que se guardó de esa forma al establecerlo en el enrutamiento `<Route exact path="/movies/:movieId" element={<MovieDetails />} />`. Esta variable se usa en este componente para hacer una consulta a la API formando el **path="/movies/:movieId"**, y haciendo dicha consulta cada vez que se renderiza el componente `<MoviesDetails />, o cuando cambia la variable **movieId** (que puede ser escrita manualmente en el navegador sin tener que hacer click en ninguna tarjeta).
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### 2.1.2. `{ useState } from "react"`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Este hook se usa mediante el siguiente código: `const [variable, setVariable] = useState([])`. Esto es una destructuración de datos, la cual crea en la variable llamada **variable** un estado que será actualizado mediante la función guardada como **setVariable**. Posteriormente lo que se hace es activar `setVariable()` con una acción dentro que actualice a **variable**. 
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+De esa manera, `useState()` se usa siempre que se quiera crear un estado que se tenga que actualizar en relación a los eventos que sucedan en la página. Usualmente suele ponerse la función `setVariable()` dentro de la llamada al hook **useEffect**.
 
-## Learn More
+El arreglo vacío **[]** pasado como parámetro indica el estado inicial que le quiere dar a **variable**. Puede ser 0, un string vacío, la variable null, etc.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Se crean los siguientes estados:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+-`const [movie, setMovie] = useState(null)`
+-`const [isLoading, setIsLoading] = useState(true)`
 
-### Code Splitting
+La función **setMovie()** actualiza el valor de la variable **movie**, la cual tiene un valor inicial de *null*, y que es el arreglo de datos de las peliculas que llega desde la API. Por su parte, la función **setIsLoading()** actualiza la variable **isLoading** que le indica al componente si la aplicación se encuentra esperando la respuesta de la petición de los datos o si ya los ha recibido, para saber cuando mostrar en pantalla el spinner de carga.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+#### 2.1.3. `{ useEffect } from "react"`
 
-### Analyzing the Bundle Size
+El hook **useEffect** permite ejecutar tareas secundarias dentro de nuestros componentes funcionales cuando suceden los siguientes eventos: cuando el componente es montado, cuando el componente sufre un cambio en su state o props, o cuando el componente es desmontado.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Dentro del llamado al **useEffect()** de este componente se llama a la función que llama a los datos de la pelicula seleccionada mediente la variable **movieId**. También se maneja la variable **isLoading** para mostrar u ocultar el spinner de carga. Se setea en *true* si se renderiza el componente o cuando cambia la variable **movieID** y se setea en *false* dentro del fetch que consulta a la API. Es decir, se deja de mostrar el spinner cuando se reciben los datos.
 
-### Making a Progressive Web App
+### 3. Elemento `<LandingPage />`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Este elemento carga dos componentes internos, el componente `<Search />` y el componente `<MoviesGrid />`, los cuales ya se encuentran dentro de la carpeta que contiene todos los demás componentes de la aplicación, **src/components**.
 
-### Advanced Configuration
+#### 2.1. `<Search />`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Este componente le permite al usuario ingresar una palabra clave para hacer una consulta a la API de peliculas. Usa la librería `react-icons/fa` para usar el componente `<FaSearch />` para generar un ícono de lupa de búsqueda, y los siguientes hooks:
 
-### Deployment
+-`{ useState } from "react"`
+-`{ useEffect } from "react"`
+-`{ useNavigate } from "react-router-dom"`
+-`{ useQuery } from "../hooks/useQuery";`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+#### 2.1.1. -`{ useState } from "react"`
 
-### `npm run build` fails to minify
+Se crea el estado `const [searchText, setSearchText] = useState("")`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+#### 2.1.2. `{ useEffect } from "react"`
