@@ -7,7 +7,7 @@ import styles from "./MoviesGrid.module.css";
 import { useQuery } from "../hooks/useQuery";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-export function MoviesGrid() {
+export function MoviesGrid( {search} ) {
   /* useState hook works creating an array, being the first element of this array
      the set of data that we want to update from the API, and the second element
      will be the function that let us update that data inside the first element. 
@@ -28,9 +28,13 @@ export function MoviesGrid() {
   /* We create a state to update the page, using "1" as the default value of the page variable */
   const [ page, setPage ] = useState(1);
 
+  /* We create a state to set the hasMore parameter in the InfiniteScroll component */
+  const [ hasMore, setHasMore ] = useState(true);
+
   /* Lo que retorna el hook personalizado useQuery se guarda en una variable, y luego mediante el método get se obtiene lo que se identifique como search. Mientras que el useLocation().search arroja "?search=bat", useQuery().get("search") arroja sólo "bat" */
-  const query = useQuery();
-  const search = query.get("search");
+  /* Las sentencias de abajo se terminan comentando ya que la variable search y el uso del hook useQuery se implementan en el componente padre LandingPage, y allí se le pasa al componente MoviesGrid un parámetro search creado a partir del hook (de la misma forma que aquí), y se captura del otro lado, dentro del MoviesGrid, parar usarse en la lógica de ese componente. */
+  /*const query = useQuery();
+  const search = query.get("search");*/
 
   useEffect(() => {
     setIsLoading(true);
@@ -42,6 +46,7 @@ export function MoviesGrid() {
     get(searchURL).then((data) => {
       /* Instead of using setMovies(data.results), we use setMovies((prevMovies) => prevMovies.concat(data.results)), becuase we need to add the previous movies array, that is related to page 1, to the movies array related to the second page, and so on */
       setMovies((prevMovies) => prevMovies.concat(data.results));
+      setHasMore(data.page < data.total_pages);
       setIsLoading(false);
     });
 
