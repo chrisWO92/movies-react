@@ -90,5 +90,35 @@ Lo que retorna el hook personalizado **useQuery()** se guarda en una variable, y
 
 Con esta cadena de texto escrita en el input del form, se hace la consulta a la API cuando se activa el **useEffect()**, que se ejecuta cuando cambia la variable **search** y también cuando se actualiza la página de la consulta (este dato sirve para hacer el InfiniteScroll).
 
+#### 3.1.5. Últimas consideraciones componente Search
 
-# Terminar de explicar el componente Search
+El form tiene un manejador de submit que actualiza la ruta del navegador mediante el hook **useNavigate()**. 
+
+En el input tiene un evento **onChange={}** que permite usar la función **setSearchText()** para actualizar constantemente el valor de la variable search, y por medio del parámetro **value** también del input, que se iguala a la variable **search**, se mantiene este valor actualizado todo el tiempo.
+
+
+#### 3.1. `<MoviesGrid />`
+
+El componente `<MoviesGrid />` es el que se encarga de mostrar todas las peliculas en la pantalla, ya sean los traidos por default en la primera página de los datos de la API, o aquellos obtenidos por realizar una consulta en el buscador.
+
+El **useEffect()** de este componente define la variable **searchURL** a partir de un operador ternario que depende de las caracteristicas de la variable **search**. Si esta variable está definida, entonces crea una ruta de consulta para la API de cierta manera que traiga sólo las peliculas relacionadas a la palabra clave, con su respectivo número de página. Pero si no existe esa variable le ruta que se define es distinta y está destinada a hacer una consulta default de la API en la que trae las peliculas más habladas del momento, también con un número de página que se irá actualizando en la medida que se va haciendo scroll y se van cargando nuevas peliculas. Esta funcionalidad se explicará en detalle y de manera particular.
+
+Dentro de la función que hace la consulta a la API, se define la función **setMovies()** para que al llegar los datos, se agreguen a los datos que ya se tenían anteriormente, agregando debajo de las peliculas mostradas actualmente, la siguiente página de información cargada. 
+
+Vale la pena resaltar que el **fetch()** ejecuta en su interior uns sentencia que permite hacer esta concatenación. 
+
+El efecto se ejecuta vigilando las variables **search** y **page**.
+
+Para la carga de varias páginas, este componente usa una librería llamada `react-infinite-scroll-component`, que permite crear el componente `<InfiniteScrollComponent />`. Este componente recibe varios parámetros, como el tamaño del array de datos que necesita cargar, si hay más páginas para cargar o no, permite definir un "loader" para mostrarlo mientras se cargan los datos, y también recibe la función "next" dentro de la cual se usa la función **setPage()** en la cual se agrega uno al número de la página actual para enviarle ese número al **useEffect()**, el cual se ejecutará cuando vea que la variable **page** sufrió un cambio.
+
+Posteriormente se observa que el set de datos **movies** se mapea para generar una `<MovieCarg />` por cada pelicula.
+
+### 4. `<MovieCard />`
+
+Este componente no es más que la tarjeta que se mostrará por cada uno de las peliculas cargadas y mapeadas del set **movies**. 
+
+Como se observa, la tarjeta toda se encuentra dentro de un componente `<Link />` ya que debe redirigir a una página nueva donde se cargará un componente `<MovieDetails />`, a través de la ruta `<Link to={"/movies/" + movie.id}>`.
+
+### 5. `<Spinner />`
+
+Se usa una librería de iconos para react llamada `react-icons/fa`, y se implementa un spinner, el cual se hace girar con CSS usando una simple animación infinita.
