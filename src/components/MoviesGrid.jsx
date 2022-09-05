@@ -6,6 +6,7 @@ import { Spinner } from "../components/Spinner";
 import styles from "./MoviesGrid.module.css";
 import { useQuery } from "../hooks/useQuery";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { Empty } from "./Empty";
 
 export function MoviesGrid( {search} ) {
   /* useState hook works creating an array, being the first element of this array
@@ -59,6 +60,10 @@ export function MoviesGrid( {search} ) {
   /* if (isLoading) {
     return <Spinner />;
   } */
+
+  if (movies.length === 0) {
+    return <Empty />
+  }
 
   return (
     <InfiniteScroll

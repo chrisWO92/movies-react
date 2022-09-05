@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { get } from "../utils/httpClient";
 import { useState } from "react";
 import { Spinner } from "../components/Spinner";
+import { getMovieImg } from "../utils/getMovieImg";
 
 
 /* We load this file to get details of the film. In this case this movie.json just has
@@ -46,7 +47,7 @@ export function MovieDetails() {
         return null;
     }
 
-    const imageURL = "https://image.tmdb.org/t/p/w500" + movie.poster_path;
+    const imageURL = getMovieImg(movie.poster_path, 500);
     
     return (
         <div className={styles.detailsContainer}>

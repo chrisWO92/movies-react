@@ -38,6 +38,8 @@ export function Search() {
         {/* La propiedad value y el manejador onChange se usan para actualizar constantemente el valor del texto del input en la medida que lo vamos editando. Mediante la función setSearchText le asignamos a la propiedad value, el valor de la variable searchText, que se actualiza al valor qque trae consigo el evengo de cambio, que es e.target.value */}
         <input
           className={styles.searchInput}
+          placeholder="Title"
+          aria-label="Search Movies"
           type="text"
           value={search}
           onChange={(e) => {
@@ -52,9 +54,8 @@ export function Search() {
         {/* El evento click no se pone directamente dentro del button porque este se encuentra dentro de un form.
                     Cuando un button se encuentra dentro de un form, el envío de la información del form mediante el button se
                     maneja mediante un evento onSubmit directamente en el form */}
-        <button className={styles.searchButton} type="submit">
-          <FaSearch size={20} />
-        </button>
+        <FaSearch size={20} color="black" className={styles.searchButton} />
+        
       </div>
     </form>
   );
